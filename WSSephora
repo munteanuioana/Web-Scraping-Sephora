@@ -1,0 +1,156 @@
+# Echipa formata din trei persoane: Danila ALexandra, Munteanu Ioana si Tanasa Roxana.
+# Site: Sephora (www.sephora.ro)
+# Categoria: Parfumuri
+
+
+#############################
+###### ALEXANDRA DANILA #####
+#############################
+
+# import the necessary libraries
+import urllib.request as urllib2
+from bs4 import BeautifulSoup
+
+# specify the url
+quote_page = "https://www.sephora.ro/parfumuri/parfumuri-pentru-ea/metallique-eau-de-parfum-apa-de-parfum-50-ml-484491.html"
+
+# query the website and return the html to the variable ‘page’
+page = urllib2.urlopen(quote_page)
+
+# parse the html using beautiful soup and store in variable `soup`
+soup = BeautifulSoup(page,'html.parser')
+
+# remove text in a <sup> tag from a span while scraping the rest of the text
+[s.extract() for s in soup('sup')]
+
+# Take out the brand of product and get its value
+brand_box = soup.find('a', attrs={'class': 'brand image'})
+
+brandProductA = brand_box.text.strip() # strip() is used to remove starting and trailing
+
+print(brandProductA)
+
+# Take out the name  of product and get its value
+name_box = soup.find('h1', attrs={'class': 't-font-heading t-heading-color product-name'})
+
+nameProductA = name_box.text.strip() # strip() is used to remove starting and trailing
+
+print(nameProductA)
+
+# Take out the price  of product and get its value
+price_box = soup.find('div', attrs={'class': 'price t-call-to-action-background-to-text'})
+
+priceProductA = price_box.text.strip() # strip() is used to remove starting and trailing
+
+print(priceProductA)
+
+# Take out the description  of product and get its value
+description_box = soup.find('div', attrs={'class': 'content'})
+descriptionProductA = description_box.text.strip() # strip() is used to remove starting and trailing
+
+print(descriptionProductA)
+
+
+################################
+###### ELENA ROXANA TANASA #####
+################################
+
+# specify the url
+quote_page = "https://www.sephora.ro/parfumuri/parfumuri-pentru-ea/j-adore-eau-de-parfum-limited-edition-apa-de-parfum-editie-limitata-50-ml-484466.html"
+
+# query the website and return the html to the variable ‘page’
+page = urllib2.urlopen(quote_page)
+
+# parse the html using beautiful soup and store in variable `soup`
+soup = BeautifulSoup(page,'html.parser')
+
+# remove text in a <sup> tag from a span while scraping the rest of the text
+[s.extract() for s in soup('sup')]
+
+# Take out the brand of product and get its value
+brand_box = soup.find('a', attrs={'class': 'brand image'})
+
+brandProductR = brand_box.text.strip() # strip() is used to remove starting and trailing
+
+print(brandProductR)
+
+# Take out the name  of product and get its value
+name_box = soup.find('h1', attrs={'class': 't-font-heading t-heading-color product-name'})
+
+nameProductR = name_box.text.strip() # strip() is used to remove starting and trailing
+
+print(nameProductR)
+
+# Take out the price  of product and get its value
+price_box = soup.find('div', attrs={'class': 'price-section'})
+
+priceProductR = price_box.text.strip() # strip() is used to remove starting and trailing
+
+print(priceProductR)
+
+############################
+###### IOANA MUNTEANU ######
+############################
+# specify the url
+quote_page = "https://www.sephora.ro/parfumuri/parfumuri-pentru-ea"
+
+# query the website and return the html to the variable ‘page’
+page = urllib2.urlopen(quote_page)
+
+# parse the html using beautiful soup and store in variable `soup`
+soup = BeautifulSoup(page,'html.parser')
+
+# remove text in a <sup> tag from a span while scraping the rest of the text
+[s.extract() for s in soup('sup')]
+
+# Take out the brand price of one perfume
+brand_price = soup.find('div', attrs={'class': 'product-section-price'})
+brandPriceI = brand_price.text.strip() #removing starting and trailing
+print(brandPriceI)
+
+# Getting multiple prices
+for all_prices in soup.find_all(class_="product-section-price"):
+    all_prices_p = all_prices.text.strip()
+    print(all_prices_p)
+
+
+# Getting the name of one perfume
+name_perfume = soup.find('h3', attrs={'class': 'product-name'})
+namePerfumeI = name_perfume.text.strip() #removing starting and trailing
+print(namePerfumeI)
+
+# Getting the name of multiple perfumes
+for all_names in soup.find_all(class_="product-name"):
+    all_names_p = all_names.text.strip()
+    print(all_names_p)
+    
+    
+# Getting the brand of one perfume
+brand_perfume = soup.find('h4', attrs={'class':"brand-name"})
+brandPerfumeI = brand_perfume.text.strip()
+print(brandPerfumeI)
+
+# Getting the brand of multiple perfumes
+for all_brands in soup.find_all(class_="brand-name"):
+    all_brands_p = all_brands.text.strip()
+    print(all_brands_p)
+
+
+# Saving the results in .csv format
+import csv
+
+#Ioana:
+with open('ws_sephora_ioana.csv', "a") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow([brandPerfumeI, brandPriceI, namePerfumeI])
+
+
+#Roxana:
+with open('ws_sephora_roxana.csv', "a") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow([brandProductR, nameProductR, priceProductR])
+
+#Alexandra:
+with open('ws_sephora_alexandra.csv', "a") as csv_file:
+        writer = csv.writer(csv_file)
+        writer.writerow([brandProductA, nameProductA, priceProductA, descriptionProductA])
