@@ -1,0 +1,51 @@
+from bs4 import BeautifulSoup
+import requests
+import csv
+import time
+import os
+
+############################################################
+### Web Scraping - multiple products from multiple pages ###
+############################################################
+
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+pages=["pag-2", "pag-3","pag-4","pag-5", "pag-6", "pag-7", "pag-8", "pag-9", "pag-10", "pag-11"]
+
+with open("E:/MASTER DM/AN II/SEM I/PRELUCRARE STATISTICA A DATELOR TEXT/Parfums_Femme.csv", 'a', newline='') as f_output:
+    csv_print=csv.writer(f_output)
+    
+    file_is_empty=os.stat('E:/MASTER DM/AN II/SEM I/PRELUCRARE STATISTICA A DATELOR TEXT/Parfums_Femme.csv').st_size==0
+    if file_is_empty:
+        csv_print.writerow(["Name product","Price", "Brand"])
+    for page in pages:
+        source=requests.get("https://www.sephora.ro/parfumuri/parfumuri-pentru-ea/()".format(page), headers=headers).text
+                
+        soup=BeautifulSoup(source, features="lxml")
+           
+        [s.extract() for s in soup('sup')]
+        for products in soup.find_all('div', attrs={'class': 'product-sephora'}):
+                    
+            try:
+                name=products.find('h3', attrs={'class':'product-name'}).text.strip()
+            except Exception as e:
+                name= None
+                print ("Name product: ", name)
+                    
+            try:
+                price=products.find('div', attrs={'class':'product-section-price'}).text.strip()
+            except Exception as e:
+                price= None
+                print ("Price product: ", price)
+                    
+            try:        
+                brand=products.find('h4', attrs={'class':'brand-name t-font-heading'}).text.strip()
+            except Exception as e:
+                brand= None
+                print ("Brand product: ", brand)  
+                    
+            csv_print.writerow([name, price, brand])
+                    
+            print('--------------------------------')
+                    
+            time.sleep(0.5)
+                   
